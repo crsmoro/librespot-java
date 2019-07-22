@@ -9,7 +9,6 @@ import xyz.gianlu.librespot.common.Utils;
 import xyz.gianlu.librespot.core.Session;
 import xyz.gianlu.librespot.debug.TimingsDebugger;
 import xyz.gianlu.librespot.mercury.MercuryClient;
-import xyz.gianlu.librespot.mercury.MercuryRequests;
 import xyz.gianlu.librespot.mercury.model.EpisodeId;
 import xyz.gianlu.librespot.mercury.model.PlayableId;
 import xyz.gianlu.librespot.mercury.model.TrackId;
@@ -72,7 +71,7 @@ public abstract class BaseFeeder {
     public final @NotNull LoadedStream loadTrack(@NotNull TrackId id, @NotNull AudioQualityPreference audioQualityPreference, @Nullable AbsChunckedInputStream.HaltListener haltListener) throws IOException, MercuryClient.MercuryException, ContentRestrictedException, CdnManager.CdnException {
         TimingsDebugger.start("cdn-load-track");
 
-        Metadata.Track original = session.mercury().sendSync(MercuryRequests.getTrack(id)).proto();
+        Metadata.Track original = session.api().getMedata4Track(id);
         Metadata.Track track = pickAlternativeIfNecessary(original);
         if (track == null) {
             String country = session.countryCode();
@@ -104,7 +103,7 @@ public abstract class BaseFeeder {
     public final @NotNull LoadedStream loadEpisode(@NotNull EpisodeId id, @Nullable AbsChunckedInputStream.HaltListener haltListener) throws IOException, MercuryClient.MercuryException, CdnManager.CdnException {
         TimingsDebugger.start("cdn-load-episode");
 
-        Metadata.Episode episode = session.mercury().sendSync(MercuryRequests.getEpisode(id)).proto();
+        Metadata.Episode episode = session.api().getMedata4Episode(id);
 
         Metadata.AudioFile file = null;
         for (Metadata.AudioFile f : episode.getAudioList()) {
