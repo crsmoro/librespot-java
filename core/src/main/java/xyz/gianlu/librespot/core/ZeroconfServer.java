@@ -10,6 +10,7 @@ import xyz.gianlu.librespot.common.NameThreadFactory;
 import xyz.gianlu.librespot.common.Utils;
 import xyz.gianlu.librespot.common.proto.Authentication;
 import xyz.gianlu.librespot.crypto.DiffieHellman;
+import xyz.gianlu.librespot.debug.TimingsDebugger;
 import xyz.gianlu.librespot.mercury.MercuryClient;
 
 import javax.crypto.Cipher;
@@ -234,6 +235,8 @@ public class ZeroconfServer implements Closeable {
     }
 
     private void handleAddUser(OutputStream out, Map<String, String> params, String httpVersion) throws GeneralSecurityException, IOException {
+        TimingsDebugger.start("zeroconf-add-user-resp");
+
         String username = params.get("userName");
         if (username == null) {
             LOGGER.fatal("Missing userName!");
@@ -301,6 +304,7 @@ public class ZeroconfServer implements Closeable {
         out.write(resp.getBytes());
         out.flush();
 
+        TimingsDebugger.end("zeroconf-add-user-resp");
 
         try {
             Authentication.LoginCredentials credentials = inner.decryptBlob(username, decrypted);

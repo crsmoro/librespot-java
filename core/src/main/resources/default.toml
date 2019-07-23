@@ -36,4 +36,4 @@ useCdn = true # Use CDN to download tracks
 useCdn = true # Use CDN to download episodes
 
 [debug] ### Debug ###
-debug.enableTimingsDebugger=true
+enableTimingsDebugger=true
