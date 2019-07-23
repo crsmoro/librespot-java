@@ -110,6 +110,7 @@ public class Session implements Closeable {
 
     @NotNull
     static Session from(@NotNull Inner inner) throws IOException {
+        ApResolver.fillPool();
         return new Session(inner, ApResolver.getSocketFromRandomAccessPoint());
     }
 
@@ -654,8 +655,6 @@ public class Session implements Closeable {
                     throw new IllegalStateException("Missing credentials!");
                 }
             }
-
-            ApResolver.fillPool();
 
             Session session = Session.from(inner);
             session.connect();
